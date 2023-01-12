@@ -7,14 +7,19 @@ import { AppComponent } from './app.component';
 import { 
   NgbAlertModule,
   NgbDropdown, 
-  NgbModule 
+  NgbModule, 
+  NgbPopoverModule
 } from '@ng-bootstrap/ng-bootstrap';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { VaccineImportComponent } from './components/vaccine-import/vaccine-import.component';
+import { DashboardComponent } from './components/dashboard/dashboard.component';
 
 
 @NgModule({
   declarations: [
-    AppComponent
+    AppComponent,
+    VaccineImportComponent,
+    DashboardComponent
   ],
   imports: [
     BrowserModule,
@@ -24,7 +29,8 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
     AppRoutingModule,
     NgbModule,
     NgbDropdown,
-    NgbAlertModule
+    NgbAlertModule,
+    NgbPopoverModule
   ],
   providers: [],
   bootstrap: [AppComponent]
