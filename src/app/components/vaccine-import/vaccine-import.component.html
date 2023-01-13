@@ -1,30 +1,64 @@
-<div class="card" style="width: 100%">
+<div class="card col" >
     <div class="card-header">นำเข้าไฟล์ excel</div>
     <div class="card-body">
-      <form class="row g-3">      
-        <div class="col-auto">
+     <div class="row col-auto">
+      <form class="row">      
+        <div class="col">
           <label for="inputPassword2" class="visually-hidden">Password</label>
           <input
             type="file"
-            class="form-control"
-            id="inputPassword2"
-            placeholder="Password"
+            class="form-control text-primary"
+            id="file_upload"
+            placeholder="อัพโหลดไฟล์"
             (change)="excelRead($event)"
           />
         </div>
-        <div class="col-auto">
-          <button type="submit" class="btn btn-primary mb-3">
-            ส่งออก
-          </button>
+        <div class="col">
+          <div ngbDropdown class="d-grid gap-2 mx-auto">
+            <button type="button" class="btn btn-outline-primary" id="chw_code" ngbDropdownToggle>
+              {{chwDropdownList.label}}
+            </button>
+            <div ngbDropdownMenu aria-labelledby="chw_code">
+              <button ngbDropdownItem *ngFor="let item of chw_code" (click)="chwIsSelect(item)">{{item}}</button>
+            </div>
+          </div>
         </div>
+        <div class="col">          
+          <div ngbDropdown class="d-grid gap-2 mx-auto">
+            <button type="button" class="btn btn-outline-primary" id="chw_amp" ngbDropdownToggle>
+              {{ampDropdownList.label}}
+            </button>
+            <div ngbDropdownMenu aria-labelledby="chw_amp">
+              <button ngbDropdownItem>Action - 1</button>
+              <button ngbDropdownItem>Another Action</button>
+              <button ngbDropdownItem>Something else is here</button>
+            </div>
+          </div>
+        </div>
+        <div class="col">          
+          <div ngbDropdown class="d-grid gap-2 mx-auto">
+            <button type="button" class="btn btn-outline-primary" id="chw_tmp" ngbDropdownToggle>
+              {{tmpDropdownList.label}}
+            </button>
+            <div ngbDropdownMenu aria-labelledby="chw_tmp">
+              <button ngbDropdownItem>Action - 1</button>
+              <button ngbDropdownItem>Another Action</button>
+              <button ngbDropdownItem>Something else is here</button>
+            </div>
+          </div>
+        </div>
+        <div class="col d-md-flex justify-content-md-end">
+          <button class="btn btn-primary">ออกรายงาน</button>
+        </div>       
       </form>
+     </div>
     </div>
   </div>
   
   <table>
-      <tr *ngFor="let item of result; let index1=index">
+      <!-- <tr *ngFor="let item of result; let index1=index">
           <td>{{index1+1}}</td>
           <td>{{item | json}}</td>
-      </tr>
+      </tr> -->
   </table>
   
