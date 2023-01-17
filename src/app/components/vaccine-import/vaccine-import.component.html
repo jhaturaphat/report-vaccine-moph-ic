@@ -52,17 +52,39 @@
      </div>
     </div>
   </div>
-  
-  <table>
-      <!-- <tr *ngFor="let item of result; let index1=index">
-          <td>{{index1+1}}</td>
-          <td>{{item | json}}</td>
-      </tr> -->
-  </table>
+
   <div class="loading-content" *ngIf="isLoading">
     <br>
     <div>กำลังอัพโหลดข้อมูล</div>
     <div class="loader"></div>
   </div>
+  <!-- *ngIf="data_amp_result.length > 0" -->
+  <table class="table" *ngIf="data_amp_result.length > 0">
+    <thead>
+      <tr>
+        <th class="col">ลับดับ</th>
+        <th class="col">ตำบล</th>
+        <th class="col">เป้าหมาย</th>
+        <th class="col">เข็ม1</th>
+        <th class="col">เข็ม2</th>
+        <th class="col">เข็ม3</th>
+        <th class="col">เข็ม4</th>
+        <th class="col"><i class="icofont-beaker icofont-1x"></i></th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let item of data_amp_result; let index1=index">
+        <td>{{index1 + 1}}</td>
+        <td>{{item.tmp_code}} {{item.tmp_name}}</td>
+        <td>{{item.target}}</td>
+        <td>{{item.vaccine_plan_1y}}</td>
+        <td>{{item.vaccine_plan_2y}}</td>
+        <td>{{item.vaccine_plan_3y}}</td>
+        <td>{{item.vaccine_plan_4y}}</td>
+        <td><i class="icofont-ui-delete" (click)="delete(item.tmp_code)"></i></td>
+    </tr>
+    </tbody>
+  </table>
+  
 
   

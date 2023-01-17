@@ -147,9 +147,9 @@ export class VaccineImportComponent {
         }
         // console.log(new Date()); 
         this.chw_code = this.result.map((e:any)=>e.chw_code).reduce((unique:any, item:any)=>(unique.includes(item) ? unique : [...unique, item]),[]).sort();        
-        // console.log(this.chw_code);
-        this.isLoading = false;
-      }          
+        // console.log(this.chw_code);        
+      }    
+      this.isLoading = false;      
     });
   }
 
@@ -157,11 +157,9 @@ export class VaccineImportComponent {
     this.chwDropdownList.id = item;
     this.chwDropdownList.label = item;
     // console.log(item);    
-    this.chw_result = this.result.filter((e:any) => {
-      return e.chw_code === item
-    });
+    this.chw_result = this.result.filter((e:any) => e.chw_code === item);
     this.amp_code = this.chw_result.map((e:any)=>e.amp_code).reduce((unique:any, item:any)=>(unique.includes(item) ? unique : [...unique, item]),[]);
-    console.log(this.amp_code); 
+    // console.log(this.amp_code); 
     this.amp_code.sort((a, b) => a - b);
        
 
@@ -190,10 +188,19 @@ export class VaccineImportComponent {
       return res;
     }, {})    
     this.data_amp_result.sort((a, b) => a.tmp_code - b.tmp_code);
-    console.log(this.data_amp_result);
-    
-    
+    console.log(this.data_amp_result);       
+  }
+  delete(item:any){
+    this.removeObjectWithId(this.data_amp_result, item);
   }
 
+  removeObjectWithId(objs:any, id:any) {
+    const objWithIdIndex = objs.findIndex((obj:any) => obj.tmp_code === id);  
+    if (objWithIdIndex > -1) {
+      objs.splice(objWithIdIndex, 1);
+    }
+  
+    return objs;
+  }
 
 }
