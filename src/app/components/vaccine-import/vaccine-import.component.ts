@@ -1,5 +1,16 @@
 import { Component } from '@angular/core';
+import * as Highcharts from 'highcharts';
 import readXlsxFile from 'read-excel-file';
+
+import HC_exporting from 'highcharts/modules/exporting';
+import HC_Data from 'highcharts/modules/export-data';
+import Accessbility from 'highcharts/modules/accessibility';
+
+import { Options } from "highcharts";
+
+HC_exporting(Highcharts);
+HC_Data(Highcharts);
+Accessbility(Highcharts);
 
 @Component({
   selector: 'app-vaccine-import',
@@ -25,6 +36,10 @@ export class VaccineImportComponent {
 
 
   isLoading:boolean = false;
+  Highcharts: typeof Highcharts = Highcharts;
+  categories:string[] = [];
+  series:any[] = [];
+
 
   result:any[] = [];  
   chw_code:any[] = [];
@@ -177,10 +192,16 @@ export class VaccineImportComponent {
       if(!res[obj.tmb_code]){
         let tmp_name = (typeof obj.full_addr_name !== 'undefined')? obj.full_addr_name.split(' ')[0]:null;        
         let tmp_code = (typeof obj.tmb_code !== 'undefined')? parseInt(obj.tmb_code):0;        
-        res[obj.tmb_code] = {tmp_code:tmp_code, tmp_name:tmp_name, target:0, vaccine_plan_1y:0, vaccine_plan_2y:0, vaccine_plan_3y:0, vaccine_plan_4y:0}
+        res[obj.tmb_code] = {tmp_code:tmp_code, tmp_name:tmp_name, 
+          target1:0, vaccine_plan_1Y:0, vaccine_plan_1N:0, vaccine_plan_1PC:0,
+          target2:0, vaccine_plan_2Y:0, vaccine_plan_2N:0, vaccine_plan_2PC:0,
+          target3:0, vaccine_plan_3Y:0, vaccine_plan_3N:0, vaccine_plan_3PC:0,
+          target4:0, vaccine_plan_4Y:0, vaccine_plan_4N:0, vaccine_plan_4PC:0
+        }
         this.data_amp_result.push(res[obj.tmb_code]);
       }
-      res[obj.tmb_code].target += 1;
+      res[obj.tmb_code].target1 += 1;
+      res[obj.tmb_code].target1 += 1;
       res[obj.tmb_code].vaccine_plan_1y += (obj.vaccine_plan_1 === 'Y')? 1 : 0;
       res[obj.tmb_code].vaccine_plan_2y += (obj.vaccine_plan_2 === 'Y')? 1 : 0;
       res[obj.tmb_code].vaccine_plan_3y += (obj.vaccine_plan_3 === 'Y')? 1 : 0;
@@ -198,9 +219,58 @@ export class VaccineImportComponent {
     const objWithIdIndex = objs.findIndex((obj:any) => obj.tmp_code === id);  
     if (objWithIdIndex > -1) {
       objs.splice(objWithIdIndex, 1);
-    }
-  
+    }  
     return objs;
   }
 
+  item:any[]=[];
+  createReport():void{
+    this.categories = this.data_amp_result.map((e:any)=>e.tmp_name);
+    this.series = this.data_amp_result.map((e:any)=>{      
+
+    })
+    console.log(this.categories);    
+    console.log(this.series);
+    
+  }
+
+  chartOptions: Options = {  
+    chart: {
+      type: 'column'
+    },
+    credits: {
+      enabled: false  //How to remove Highcharts.com at right bottom corner in chart
+    },
+    title: {
+        text: 'Monthly Average Rainfall'
+    },
+    subtitle: {
+        text: 'Source: WorldClimate.com'
+    },
+    xAxis: {
+        categories: this.categories,
+        crosshair: true
+    },
+    yAxis: {
+        min: 0,
+        title: {
+            text: 'Rainfall (mm)'
+        }
+    },
+    tooltip: {
+        headerFormat: '<span style="font-size:10px">{point.key}</span><table>',
+        pointFormat: '<tr><td style="color:{series.color};padding:0">{series.name}: </td>' +
+            '<td style="padding:0"><b>{point.y:.1f} mm</b></td></tr>',
+        footerFormat: '</table>',
+        shared: true,
+        useHTML: true
+    },
+    plotOptions: {
+        column: {
+            pointPadding: 0.2,
+            borderWidth: 0
+        }
+    },
+    series: this.series
+    }
 }
