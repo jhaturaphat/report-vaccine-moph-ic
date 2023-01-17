@@ -21,6 +21,8 @@
     "@ng-bootstrap/ng-bootstrap": "^14.0.1",
     "@popperjs/core": "^2.11.6",
     "bootstrap": "^5.2.3",
+    "highcharts": "^10.3.2",
+    "highcharts-angular": "^3.0.0",
     "read-excel-file": "^5.5.3",
     "rxjs": "~7.5.0",
     "tslib": "^2.3.0",

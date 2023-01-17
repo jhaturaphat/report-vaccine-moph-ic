@@ -13,6 +13,7 @@ import {
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { VaccineImportComponent } from './components/vaccine-import/vaccine-import.component';
 import { DashboardComponent } from './components/dashboard/dashboard.component';
+import { HighchartsChartModule } from 'highcharts-angular';
 
 
 @NgModule({
@@ -27,6 +28,7 @@ import { DashboardComponent } from './components/dashboard/dashboard.component';
     FormsModule,
     ReactiveFormsModule,
     AppRoutingModule,
+    HighchartsChartModule,
     NgbModule,
     NgbDropdown,
     NgbAlertModule,

@@ -46,7 +46,7 @@
           </div>
         </div> -->
         <div class="col d-md-flex justify-content-md-end">
-          <button class="btn btn-primary">ออกรายงาน</button>
+          <button class="btn btn-primary"(click)="createReport()">สร้างกราฟ</button>
         </div>       
       </form>
      </div>
@@ -85,6 +85,14 @@
     </tr>
     </tbody>
   </table>
+
+  <h3>Angular(V14) standalone components with Highcharts</h3>
+<highcharts-chart
+  [Highcharts]="Highcharts"
+  [options]="chartOptions"
+  style="width: 100%; height: 400px; display: block;"
+>
+</highcharts-chart>
   
 
   
