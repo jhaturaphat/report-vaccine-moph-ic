@@ -1,4 +1,4 @@
-export interface iTmbSerial {
+export interface iSerail {
     name:string,
     data:number[]
 }

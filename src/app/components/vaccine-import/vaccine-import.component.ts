@@ -7,6 +7,8 @@ import HC_Data from 'highcharts/modules/export-data';
 import Accessbility from 'highcharts/modules/accessibility';
 
 import { Options } from "highcharts";
+import { Obj } from '@popperjs/core';
+import { iSerail } from './Ichart-vaccine.interface';
 
 HC_exporting(Highcharts);
 HC_Data(Highcharts);
@@ -37,8 +39,14 @@ export class VaccineImportComponent {
 
   isLoading:boolean = false;
   Highcharts: typeof Highcharts = Highcharts;
+  updateFlag = false;
   categories:string[] = [];
   series:any[] = [];
+  target:iSerail = {name:'เป้าหมาย', data:[]};
+  vac1:iSerail = {name:'เข็ม1',data:[]};
+  vac2:iSerail = {name:'เข็ม2',data:[]};
+  vac3:iSerail = {name:'เข็ม3',data:[]};
+  vac4:iSerail = {name:'เข็ม4',data:[]};
 
 
   result:any[] = [];  
@@ -200,12 +208,18 @@ export class VaccineImportComponent {
         }
         this.data_amp_result.push(res[obj.tmb_code]);
       }
-      res[obj.tmb_code].target1 += 1;
-      res[obj.tmb_code].target1 += 1;
-      res[obj.tmb_code].vaccine_plan_1y += (obj.vaccine_plan_1 === 'Y')? 1 : 0;
-      res[obj.tmb_code].vaccine_plan_2y += (obj.vaccine_plan_2 === 'Y')? 1 : 0;
-      res[obj.tmb_code].vaccine_plan_3y += (obj.vaccine_plan_3 === 'Y')? 1 : 0;
-      res[obj.tmb_code].vaccine_plan_4y += (obj.vaccine_plan_4 === 'Y')? 1 : 0;
+      res[obj.tmb_code].target1 += 1; //เป้าเข็ม 1
+      res[obj.tmb_code].target2 += (obj.vaccine_plan_1 === 'Y')? 1 : 0;
+      res[obj.tmb_code].target3 += (obj.vaccine_plan_2 === 'Y')? 1 : 0;
+      res[obj.tmb_code].target4 += (obj.vaccine_plan_3 === 'Y')? 1 : 0;
+      res[obj.tmb_code].vaccine_plan_1Y += (obj.vaccine_plan_1 === 'Y')? 1 : 0;
+      res[obj.tmb_code].vaccine_plan_2Y += (obj.vaccine_plan_2 === 'Y')? 1 : 0;
+      res[obj.tmb_code].vaccine_plan_3Y += (obj.vaccine_plan_3 === 'Y')? 1 : 0;
+      res[obj.tmb_code].vaccine_plan_4Y += (obj.vaccine_plan_4 === 'Y')? 1 : 0;
+      res[obj.tmb_code].vaccine_plan_1N += (obj.vaccine_plan_1 === 'N')? 1 : 0;
+      res[obj.tmb_code].vaccine_plan_2N += (obj.vaccine_plan_2 === 'N')? 1 : 0;
+      res[obj.tmb_code].vaccine_plan_3N += (obj.vaccine_plan_3 === 'N')? 1 : 0;
+      res[obj.tmb_code].vaccine_plan_4N += (obj.vaccine_plan_4 === 'N')? 1 : 0;
       return res;
     }, {})    
     this.data_amp_result.sort((a, b) => a.tmp_code - b.tmp_code);
@@ -226,15 +240,35 @@ export class VaccineImportComponent {
   item:any[]=[];
   createReport():void{
     this.categories = this.data_amp_result.map((e:any)=>e.tmp_name);
-    this.series = this.data_amp_result.map((e:any)=>{      
+    this.target.data = this.data_amp_result.map((e:any)=>{
+      return e.target1
+    });
+    this.vac1.data = this.data_amp_result.map((e:any)=>{
+      return e.vaccine_plan_1Y
+    });
+    this.vac2.data = this.data_amp_result.map((e:any)=>{
+      return e.vaccine_plan_2Y
+    });
+    this.vac3.data = this.data_amp_result.map((e:any)=>{
+      return e.vaccine_plan_3Y
+    });
+    this.vac4.data = this.data_amp_result.map((e:any)=>{
+      return e.vaccine_plan_4Y
+    });
 
-    })
+    this.series.push(this.target, this.vac1,this.vac2,this.vac3,this.vac4);
+    this.chartOptions.series = this.series;  
+    this.chartOptions.xAxis = {
+      categories:this.categories
+    };
+    this.updateFlag = true;
+
     console.log(this.categories);    
     console.log(this.series);
     
   }
 
-  chartOptions: Options = {  
+  chartOptions: Highcharts.Options = {  
     chart: {
       type: 'column'
     },
@@ -260,7 +294,7 @@ export class VaccineImportComponent {
     tooltip: {
         headerFormat: '<span style="font-size:10px">{point.key}</span><table>',
         pointFormat: '<tr><td style="color:{series.color};padding:0">{series.name}: </td>' +
-            '<td style="padding:0"><b>{point.y:.1f} mm</b></td></tr>',
+            '<td style="padding:0"><b>{point.y:.1f} ราย</b></td></tr>',
         footerFormat: '</table>',
         shared: true,
         useHTML: true
