@@ -1,99 +1,105 @@
 <div class="card col shadow-sm">
-    <div class="card-header bg-light shadow-sm">นำเข้าไฟล์ excel</div>
-    <div class="card-body">
-     <div class="row col-auto">
-      <form class="row">      
-        <div class="col">
-          <label for="inputPassword2" class="visually-hidden">Password</label>
-          <input
-            type="file"
-            class="form-control text-primary"
-            id="file_upload"
-            placeholder="อัพโหลดไฟล์"
-            (change)="excelRead($event)"
-          />
-        </div>
-        <div class="col">
-          <div ngbDropdown class="d-grid gap-2 mx-auto">
-            <button type="button" class="btn btn-outline-primary" id="chw_code" ngbDropdownToggle>
-              {{chwDropdownList.label}}
-            </button>
-            <div ngbDropdownMenu aria-labelledby="chw_code" style="overflow-y: scroll; width: 100%;">
-              <button ngbDropdownItem *ngFor="let item of chw_code" (click)="chwIsSelect(item)">{{item}}</button>
-            </div>
+  <div class="card-header bg-light shadow-sm">นำเข้าไฟล์ excel</div>
+  <div class="card-body">
+   <div class="row col-auto">
+    <form class="row">      
+      <div class="col">
+        <label for="inputPassword2" class="visually-hidden">Password</label>
+        <input
+          type="file"
+          class="form-control text-primary"
+          id="file_upload"
+          placeholder="อัพโหลดไฟล์"
+          (change)="excelRead($event)"
+        />
+      </div>
+      <div class="col">
+        <div ngbDropdown class="d-grid gap-2 mx-auto">
+          <button type="button" class="btn btn-outline-primary" id="chw_code" ngbDropdownToggle>
+            {{chwDropdownList.label}}
+          </button>
+          <div ngbDropdownMenu aria-labelledby="chw_code" style="overflow-y: scroll; width: 100%;">
+            <button ngbDropdownItem *ngFor="let item of chw_code" (click)="chwIsSelect(item)">{{item}}</button>
           </div>
         </div>
-        <div class="col">          
-          <div ngbDropdown class="d-grid gap-2 mx-auto">
-            <button type="button" class="btn btn-outline-primary" id="chw_amp" ngbDropdownToggle>
-              {{ampDropdownList.label}}
-            </button>
-            <div ngbDropdownMenu aria-labelledby="chw_amp" style="overflow-y: scroll;width: 100%;">
-              <button ngbDropdownItem *ngFor="let item of amp_code" (click)="ampIsSelect(item)">{{item}}</button>              
-            </div>
+      </div>
+      <div class="col">          
+        <div ngbDropdown class="d-grid gap-2 mx-auto">
+          <button type="button" class="btn btn-outline-primary" id="chw_amp" ngbDropdownToggle>
+            {{ampDropdownList.label}}
+          </button>
+          <div ngbDropdownMenu aria-labelledby="chw_amp" style="overflow-y: scroll;width: 100%;">
+            <button ngbDropdownItem *ngFor="let item of amp_code" (click)="ampIsSelect(item)">{{item}}</button>              
           </div>
         </div>
-        <!-- <div class="col">          
-          <div ngbDropdown class="d-grid gap-2 mx-auto" >
-            <button type="button" class="btn btn-outline-primary" id="chw_tmp" ngbDropdownToggle>
-              {{tmpDropdownList.label}}
-            </button>
-            <div ngbDropdownMenu aria-labelledby="chw_tmp" style="overflow-y: scroll">
-              <button ngbDropdownItem>Action - 1</button>
-              <button ngbDropdownItem>Another Action</button>
-              <button ngbDropdownItem>Something else is here</button>
-            </div>
+      </div>
+      <!-- <div class="col">          
+        <div ngbDropdown class="d-grid gap-2 mx-auto" >
+          <button type="button" class="btn btn-outline-primary" id="chw_tmp" ngbDropdownToggle>
+            {{tmpDropdownList.label}}
+          </button>
+          <div ngbDropdownMenu aria-labelledby="chw_tmp" style="overflow-y: scroll">
+            <button ngbDropdownItem>Action - 1</button>
+            <button ngbDropdownItem>Another Action</button>
+            <button ngbDropdownItem>Something else is here</button>
           </div>
-        </div> -->
-        <div class="col d-md-flex justify-content-md-end">
-          <button class="btn btn-primary shadow"(click)="createReport()">สร้างกราฟ</button>
-        </div>       
-      </form>
-     </div>
-    </div>
+        </div>
+      </div> -->
+      <div class="col d-md-flex justify-content-md-end">
+        <button class="btn btn-primary shadow"(click)="createReport()">สร้างข้อมูลก่อน</button>
+      </div>       
+    </form>
+   </div>
   </div>
+</div>
 
-  <div class="loading-content" *ngIf="isLoading">
-    <br>
-    <div>กำลังอัพโหลดข้อมูล</div>
-    <div class="loader"></div>
-  </div>
-  <!-- *ngIf="data_amp_result.length > 0" -->
-  <table class="table" *ngIf="data_amp_result.length > 0">
-    <thead>
-      <tr>
-        <th class="col">ลับดับ</th>
-        <th class="col">ตำบล</th>
-        <th class="col">เป้าหมาย</th>
-        <th class="col">เข็ม1</th>
-        <th class="col">เข็ม2</th>
-        <th class="col">เข็ม3</th>
-        <th class="col">เข็ม4</th>
-        <th class="col"><i class="icofont-beaker icofont-1x"></i></th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr *ngFor="let item of data_amp_result; let index1=index">
-        <td>{{index1 + 1}}</td>
-        <td>{{item.tmp_code}} {{item.tmp_name}}</td>
-        <td>{{item.target1}}</td>
-        <td>{{item.vaccine_plan_1Y}}</td>
-        <td>{{item.vaccine_plan_2Y}}</td>
-        <td>{{item.vaccine_plan_3Y}}</td>
-        <td>{{item.vaccine_plan_4Y}}</td>
-        <td><i class="icofont-ui-delete" (click)="delete(item.tmp_code)"></i></td>
+<div class="loading-content" *ngIf="isLoading">
+  <br>
+  <div>กำลังอัพโหลดข้อมูล</div>
+  <div class="loader"></div>
+</div>
+<!-- *ngIf="data_amp_result.length > 0" -->
+<table class="table" *ngIf="data_amp_result.length > 0">
+  <thead>
+    <tr>
+      <th class="col">ลับดับ</th>
+      <th class="col">ตำบล</th>
+      <th class="col">เป้าหมาย</th>
+      <th class="col">เข็ม1</th>
+      <th class="col">เข็ม2</th>
+      <th class="col">เข็ม3</th>
+      <th class="col">เข็ม4</th>
+      <th class="col"><i class="icofont-beaker icofont-1x"></i></th>
     </tr>
-    </tbody>
-  </table>
+  </thead>
+  <tbody>
+    <tr *ngFor="let item of data_amp_result; let index1=index">
+      <td>{{index1 + 1}}</td>
+      <td>{{item.tmp_code}} {{item.tmp_name}}</td>
+      <td>{{item.target1}}</td>
+      <td>{{item.vaccine_plan_1Y}}</td>
+      <td>{{item.vaccine_plan_2Y}}</td>
+      <td>{{item.vaccine_plan_3Y}}</td>
+      <td>{{item.vaccine_plan_4Y}}</td>
+      <td><i class="icofont-ui-delete" (click)="delete(item.tmp_code)"></i></td>
+  </tr>
+  </tbody>
+</table>
 
-  <h3>Angular(V14) standalone components with Highcharts</h3>
+<h3>Angular(V14) standalone components with Highcharts</h3>
+<div class="col d-md-flex justify-content-md-end">
+  <button class="btn btn-primary shadow"(click)="createChart()">สร้างกราฟ</button>
+</div>   
+<!-- <highcharts-chart
+[Highcharts]="Highcharts"
+[options]="chartOptions"
+[(update)]="updateFlag"
+style="width: 100%; height: 400px; display: block;"
+>
+</highcharts-chart> -->
 <highcharts-chart
-  [Highcharts]="Highcharts"
-  [options]="chartOptions"
-  [(update)]="updateFlag"
-  style="width: 100%; height: 400px; display: block;"
+[Highcharts]="Highcharts"
+[options]="linechart"
+style="width: 100%; height: 800px; display: block;"
 >
 </highcharts-chart>
-  
-
-  

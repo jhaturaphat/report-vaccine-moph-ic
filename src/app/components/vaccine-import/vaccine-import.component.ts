@@ -6,8 +6,6 @@ import HC_exporting from 'highcharts/modules/exporting';
 import HC_Data from 'highcharts/modules/export-data';
 import Accessbility from 'highcharts/modules/accessibility';
 
-import { Options } from "highcharts";
-import { Obj } from '@popperjs/core';
 import { iSerail } from './Ichart-vaccine.interface';
 
 HC_exporting(Highcharts);
@@ -20,6 +18,8 @@ Accessbility(Highcharts);
   styleUrls: ['./vaccine-import.component.css']
 })
 export class VaccineImportComponent {
+  myOptions:any={};
+  linechart:any;
   constructor(){ }
 
   chwDropdownList:any = {
@@ -209,17 +209,17 @@ export class VaccineImportComponent {
         this.data_amp_result.push(res[obj.tmb_code]);
       }
       res[obj.tmb_code].target1 += 1; //เป้าเข็ม 1
-      res[obj.tmb_code].target2 += (obj.vaccine_plan_1 === 'Y')? 1 : 0;
-      res[obj.tmb_code].target3 += (obj.vaccine_plan_2 === 'Y')? 1 : 0;
-      res[obj.tmb_code].target4 += (obj.vaccine_plan_3 === 'Y')? 1 : 0;
-      res[obj.tmb_code].vaccine_plan_1Y += (obj.vaccine_plan_1 === 'Y')? 1 : 0;
-      res[obj.tmb_code].vaccine_plan_2Y += (obj.vaccine_plan_2 === 'Y')? 1 : 0;
-      res[obj.tmb_code].vaccine_plan_3Y += (obj.vaccine_plan_3 === 'Y')? 1 : 0;
-      res[obj.tmb_code].vaccine_plan_4Y += (obj.vaccine_plan_4 === 'Y')? 1 : 0;
-      res[obj.tmb_code].vaccine_plan_1N += (obj.vaccine_plan_1 === 'N')? 1 : 0;
-      res[obj.tmb_code].vaccine_plan_2N += (obj.vaccine_plan_2 === 'N')? 1 : 0;
-      res[obj.tmb_code].vaccine_plan_3N += (obj.vaccine_plan_3 === 'N')? 1 : 0;
-      res[obj.tmb_code].vaccine_plan_4N += (obj.vaccine_plan_4 === 'N')? 1 : 0;
+      res[obj.tmb_code].target2 += (obj.vaccine_plan_1 === 'Y')? 1 : 0; //เป้าเข็ม 2
+      res[obj.tmb_code].target3 += (obj.vaccine_plan_2 === 'Y')? 1 : 0; //เป้าเข็ม 3
+      res[obj.tmb_code].target4 += (obj.vaccine_plan_3 === 'Y')? 1 : 0; //เป้าเข็ม 4
+      res[obj.tmb_code].vaccine_plan_1Y += (obj.vaccine_plan_1 === 'Y')? 1 : 0; //ฉีดเข็ม1
+      res[obj.tmb_code].vaccine_plan_2Y += (obj.vaccine_plan_2 === 'Y')? 1 : 0; //ฉีดเข็ม2
+      res[obj.tmb_code].vaccine_plan_3Y += (obj.vaccine_plan_3 === 'Y')? 1 : 0; //ฉีดเข็ม3
+      res[obj.tmb_code].vaccine_plan_4Y += (obj.vaccine_plan_4 === 'Y')? 1 : 0; //ฉีดเข็ม4
+      res[obj.tmb_code].vaccine_plan_1N += (obj.vaccine_plan_1 === 'N')? 1 : 0; //ไม่ฉีดเข็ม1
+      res[obj.tmb_code].vaccine_plan_2N += (obj.vaccine_plan_2 === 'N')? 1 : 0; //ไม่ฉีดเข็ม2
+      res[obj.tmb_code].vaccine_plan_3N += (obj.vaccine_plan_3 === 'N')? 1 : 0; //ไม่ฉีดเข็ม3
+      res[obj.tmb_code].vaccine_plan_4N += (obj.vaccine_plan_4 === 'N')? 1 : 0; //ไม่ฉีดเข็ม4
       return res;
     }, {})    
     this.data_amp_result.sort((a, b) => a.tmp_code - b.tmp_code);
@@ -257,54 +257,38 @@ export class VaccineImportComponent {
     });
 
     this.series.push(this.target, this.vac1,this.vac2,this.vac3,this.vac4);
-    this.chartOptions.series = this.series;  
-    this.chartOptions.xAxis = {
-      categories:this.categories
-    };
     this.updateFlag = true;
-
-    console.log(this.categories);    
-    console.log(this.series);
-    
+    // console.log(this.categories);    
+    // console.log(this.series);    
   }
-
-  chartOptions: Highcharts.Options = {  
-    chart: {
-      type: 'column'
-    },
-    credits: {
-      enabled: false  //How to remove Highcharts.com at right bottom corner in chart
-    },
-    title: {
-        text: 'Monthly Average Rainfall'
-    },
-    subtitle: {
-        text: 'Source: WorldClimate.com'
-    },
-    xAxis: {
-        categories: this.categories,
-        crosshair: true
-    },
-    yAxis: {
-        min: 0,
+    createChart(){
+      console.log(this.categories);
+      console.log(this.series);      
+      
+      this.linechart = {
+        chart: {
+          type: 'column', //bar, line, column
+        },
+        credits: {
+          enabled: false, //How to remove Highcharts.com at right bottom corner in chart
+        },
         title: {
-            text: 'Rainfall (mm)'
-        }
-    },
-    tooltip: {
-        headerFormat: '<span style="font-size:10px">{point.key}</span><table>',
-        pointFormat: '<tr><td style="color:{series.color};padding:0">{series.name}: </td>' +
-            '<td style="padding:0"><b>{point.y:.1f} ราย</b></td></tr>',
-        footerFormat: '</table>',
-        shared: true,
-        useHTML: true
-    },
-    plotOptions: {
-        column: {
-            pointPadding: 0.2,
-            borderWidth: 0
-        }
-    },
-    series: this.series
+          text: 'Monthly Average Rainfall',
+        },
+        subtitle: {
+          text: 'Source: WorldClimate.com',
+        },
+        xAxis: {
+          categories: this.categories          
+        },
+        plotOptions: {
+          column: {
+              pointPadding: 0.2,
+              borderWidth: 0
+          }
+      },
+      series: this.series
+      }
     }
+    
 }
