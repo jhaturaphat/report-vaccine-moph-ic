@@ -31,6 +31,12 @@
   }
 
   .icofont-ui-delete:hover{
+    cursor: pointer;
     color: red;
+    transform: rotate(2);
+  }
+  .icofont-ui-search:hover{
+    cursor: pointer;
+    color: green;
     transform: rotate(2);
   }

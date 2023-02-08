@@ -1,4 +1,4 @@
-<div class="card col shadow-sm">
+<div class="card col">
   <div class="card-header bg-light shadow-sm">นำเข้าไฟล์ excel</div>
   <div class="card-body">
    <div class="row col-auto">
@@ -46,7 +46,8 @@
         </div>
       </div> -->
       <div class="col d-md-flex justify-content-md-end">
-        <button class="btn btn-primary shadow"(click)="createReport()">สร้างข้อมูลก่อน</button>
+        <!-- <button class="btn btn-primary shadow"(click)="createReport()">สร้างข้อมูลก่อน</button> -->
+        <button class="btn btn-primary shadow"(click)="createChart()">สร้างกราฟ</button>
       </div>       
     </form>
    </div>
@@ -81,15 +82,15 @@
       <td>{{item.vaccine_plan_2Y}}</td>
       <td>{{item.vaccine_plan_3Y}}</td>
       <td>{{item.vaccine_plan_4Y}}</td>
-      <td><i class="icofont-ui-delete" (click)="delete(item.tmp_code)"></i></td>
+      <td>
+        <i class="icofont-ui-delete" (click)="delete(item.tmp_code)"></i> | 
+        <i class="icofont-ui-search" (click)="individual_tmp(item.tmp_code)"></i>
+      </td>
   </tr>
   </tbody>
 </table>
 
-<h3>Angular(V14) standalone components with Highcharts</h3>
-<div class="col d-md-flex justify-content-md-end">
-  <button class="btn btn-primary shadow"(click)="createChart()">สร้างกราฟ</button>
-</div>   
+ 
 <!-- <highcharts-chart
 [Highcharts]="Highcharts"
 [options]="chartOptions"

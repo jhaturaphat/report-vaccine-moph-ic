@@ -39,6 +39,7 @@ export class VaccineImportComponent {
 
   isLoading:boolean = false;
   Highcharts: typeof Highcharts = Highcharts;
+  chartOptions: Highcharts.Options = { }; // required
   updateFlag = false;
   categories:string[] = [];
   series:any[] = [];
@@ -194,8 +195,11 @@ export class VaccineImportComponent {
     this.ampDropdownList.id = item;
     this.ampDropdownList.label = item;
     this.data_amp_result = [];
-    // console.log(this.ampDropdownList);
+    console.log("ผลลัพธ์จังหวัด");    
+    console.log(this.chw_result);
     this.amp_result = this.chw_result.filter((e:any) => e.amp_code === item);  //กรอกให้เหลือแต่อำเภอที่เลือกมา
+    console.log("กรอกให้เหลือแต่อำเภอที่เลือกมา");    
+    console.log(this.amp_result); 
     this.amp_result.reduce((res:any, obj:any)=>{
       if(!res[obj.tmb_code]){
         let tmp_name = (typeof obj.full_addr_name !== 'undefined')? obj.full_addr_name.split(' ')[0]:null;        
@@ -223,10 +227,19 @@ export class VaccineImportComponent {
       return res;
     }, {})    
     this.data_amp_result.sort((a, b) => a.tmp_code - b.tmp_code);
-    console.log(this.data_amp_result);       
+    console.log(this.data_amp_result);  
+    this.createReport();     
   }
   delete(item:any){
     this.removeObjectWithId(this.data_amp_result, item);
+  }
+
+  individual_tmp(item:any){
+    console.log("individual_tmp");    
+    console.log(this.amp_result);    
+   let tmp_list = this.amp_result.filter((e:any) => e.tmb_code === item);
+   console.log(tmp_list);
+   
   }
 
   removeObjectWithId(objs:any, id:any) {
@@ -238,6 +251,7 @@ export class VaccineImportComponent {
   }
 
   item:any[]=[];
+
   createReport():void{
     this.categories = this.data_amp_result.map((e:any)=>e.tmp_name);
     this.target.data = this.data_amp_result.map((e:any)=>{
@@ -261,7 +275,27 @@ export class VaccineImportComponent {
     // console.log(this.categories);    
     // console.log(this.series);    
   }
+
+  toThaiDateString(date:Date) {
+    let monthNames = [
+        "มกราคม", "กุมภาพันธ์", "มีนาคม", "เมษายน",
+        "พฤษภาคม", "มิถุนายน", "กรกฎาคม", "สิงหาคม.",
+        "กันยายน", "ตุลาคม", "พฤศจิกายน", "ธันวาคม"
+    ];
+
+    let year = date.getFullYear() + 543;
+    let month = monthNames[date.getMonth()];
+    let numOfDay = date.getDate();
+
+    let hour = date.getHours().toString().padStart(2, "0");
+    let minutes = date.getMinutes().toString().padStart(2, "0");
+    let second = date.getSeconds().toString().padStart(2, "0");
+
+    return `${numOfDay} ${month} ${year} ` +
+        `${hour}:${minutes}:${second} น.`;
+}
     createChart(){
+      this.createReport();
       console.log(this.categories);
       console.log(this.series);      
       
@@ -273,10 +307,10 @@ export class VaccineImportComponent {
           enabled: false, //How to remove Highcharts.com at right bottom corner in chart
         },
         title: {
-          text: 'Monthly Average Rainfall',
+          text: 'อัตราการฉีดเทียบจำนวนเข็มตำเมืองเดช อำเภอเดชอุดม',
         },
         subtitle: {
-          text: 'Source: WorldClimate.com',
+          text: this.toThaiDateString(new Date()),
         },
         xAxis: {
           categories: this.categories          
