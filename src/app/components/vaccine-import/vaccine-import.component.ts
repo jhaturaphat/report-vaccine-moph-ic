@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import * as Highcharts from 'highcharts';
 import readXlsxFile from 'read-excel-file';
+import * as XLSX from 'xlsx';
 
 import HC_exporting from 'highcharts/modules/exporting';
 import HC_Data from 'highcharts/modules/export-data';
@@ -180,7 +181,7 @@ export class VaccineImportComponent {
   chwIsSelect(item:any){
     this.chwDropdownList.id = item;
     this.chwDropdownList.label = item;
-    // console.log(item);    
+    // console.log(item);  
     this.chw_result = this.result.filter((e:any) => e.chw_code === item);
     this.amp_code = this.chw_result.map((e:any)=>e.amp_code).reduce((unique:any, item:any)=>(unique.includes(item) ? unique : [...unique, item]),[]);
     // console.log(this.amp_code); 
@@ -227,32 +228,45 @@ export class VaccineImportComponent {
       return res;
     }, {})    
     this.data_amp_result.sort((a, b) => a.tmp_code - b.tmp_code);
-    console.log(this.data_amp_result);  
-    this.createReport();     
+    // console.log(this.data_amp_result); 
   }
   delete(item:any){
     this.removeObjectWithId(this.data_amp_result, item);
   }
 
-  individual_tmp(item:any){
-    console.log("individual_tmp");    
-    console.log(this.amp_result);    
-   let tmp_list = this.amp_result.filter((e:any) => e.tmb_code === item);
-   console.log(tmp_list);
+  individual_tmp(item:string){ 
+    // console.log("individual_tmp");  
+   let tmp_data = this.amp_result.filter((e:any) => e.tmb_code == item);
+   this.exportExcel(tmp_data);
+  //  console.log(tmp_list);
+  //  console.log("amp_result");   
+  //  console.log(this.amp_result);
    
   }
 
   removeObjectWithId(objs:any, id:any) {
-    const objWithIdIndex = objs.findIndex((obj:any) => obj.tmp_code === id);  
+    const objWithIdIndex = objs.findIndex((obj:any) => obj.tmp_code == id);  
     if (objWithIdIndex > -1) {
       objs.splice(objWithIdIndex, 1);
     }  
+    this.createChart();
     return objs;
   }
 
-  item:any[]=[];
+  exportExcel(export_data:Object[]):void{
+    /* pass here the table id */    
+    const ws: XLSX.WorkSheet =XLSX.utils.json_to_sheet<Object>(export_data);
+ 
+    /* generate workbook and add the worksheet */
+    const wb: XLSX.WorkBook = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(wb, ws, 'Sheet1');
+ 
+    /* save to file */  
+    XLSX.writeFile(wb, 'ExcelSheet.xlsx');
+  }
 
   createReport():void{
+    this.series = [];
     this.categories = this.data_amp_result.map((e:any)=>e.tmp_name);
     this.target.data = this.data_amp_result.map((e:any)=>{
       return e.target1
@@ -296,8 +310,8 @@ export class VaccineImportComponent {
 }
     createChart(){
       this.createReport();
-      console.log(this.categories);
-      console.log(this.series);      
+      // console.log(this.categories);
+      // console.log(this.series);      
       
       this.linechart = {
         chart: {
