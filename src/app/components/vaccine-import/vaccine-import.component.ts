@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import * as Highcharts from 'highcharts';
 import readXlsxFile from 'read-excel-file';
 import * as XLSX from 'xlsx';
@@ -8,6 +8,7 @@ import HC_Data from 'highcharts/modules/export-data';
 import Accessbility from 'highcharts/modules/accessibility';
 
 import { iSerail } from './Ichart-vaccine.interface';
+import { MockDataService } from 'src/app/services/mock-data.service';
 
 HC_exporting(Highcharts);
 HC_Data(Highcharts);
@@ -18,10 +19,14 @@ Accessbility(Highcharts);
   templateUrl: './vaccine-import.component.html',
   styleUrls: ['./vaccine-import.component.css']
 })
-export class VaccineImportComponent {
+export class VaccineImportComponent implements OnInit {
+
+  constructor(private mockdata:MockDataService){ }
+  
+
   myOptions:any={};
-  linechart:any;
-  constructor(){ }
+  linechart?:any;
+  
 
   chwDropdownList:any = {
     id:'',
@@ -64,6 +69,15 @@ export class VaccineImportComponent {
 
   data_amp_result:any[] = [];
 
+
+  ngOnInit(): void {
+    console.clear();
+    if(this.mockdata.vaccine_data.length > 0){      
+      this.chw_code = this.mockdata.vaccine_data.map((e:any)=>e.chw_code).reduce((unique:any, item:any)=>(unique.includes(item) ? unique : [...unique, item]),[]).sort();
+    }
+  }
+
+
   async excelRead(e:any){
     this.isLoading = true;
     let fileReaded:any;
@@ -98,6 +112,10 @@ export class VaccineImportComponent {
       },
       'person_type_name': {
         prop: 'person_type_name',
+        type: String
+      },
+      'person_risk_type_name': {
+        prop:'person_risk_type_name',
         type: String
       },
       'vaccine_plan_1': {
@@ -167,11 +185,12 @@ export class VaccineImportComponent {
     };
     await readXlsxFile(e.target.files[0], {schema}).then((data:any)=>{ 
       if(data.rows){
+        this.mockdata.vaccine_data = [];
         for(let i of data.rows){
-          this.result.push(i);
+          this.mockdata.vaccine_data.push(i);
         }
         // console.log(new Date()); 
-        this.chw_code = this.result.map((e:any)=>e.chw_code).reduce((unique:any, item:any)=>(unique.includes(item) ? unique : [...unique, item]),[]).sort();        
+        this.chw_code = this.mockdata.vaccine_data.map((e:any)=>e.chw_code).reduce((unique:any, item:any)=>(unique.includes(item) ? unique : [...unique, item]),[]).sort();        
         // console.log(this.chw_code);        
       }    
       this.isLoading = false;      
@@ -179,10 +198,10 @@ export class VaccineImportComponent {
   }
 
   chwIsSelect(item:any){
-    this.chwDropdownList.id = item;
+    this.chwDropdownList.id = item; 
     this.chwDropdownList.label = item;
     // console.log(item);  
-    this.chw_result = this.result.filter((e:any) => e.chw_code === item);
+    this.chw_result = this.mockdata.vaccine_data.filter((e:any) => e.chw_code === item);
     this.amp_code = this.chw_result.map((e:any)=>e.amp_code).reduce((unique:any, item:any)=>(unique.includes(item) ? unique : [...unique, item]),[]);
     // console.log(this.amp_code); 
     this.amp_code.sort((a, b) => a - b);
@@ -228,20 +247,24 @@ export class VaccineImportComponent {
       return res;
     }, {})    
     this.data_amp_result.sort((a, b) => a.tmp_code - b.tmp_code);
+    this.updateFlag = true;
     // console.log(this.data_amp_result); 
   }
   delete(item:any){
     this.removeObjectWithId(this.data_amp_result, item);
   }
 
-  individual_tmp(item:string){ 
+  export(item:string){ 
     // console.log("individual_tmp");  
    let tmp_data = this.amp_result.filter((e:any) => e.tmb_code == item);
    this.exportExcel(tmp_data);
   //  console.log(tmp_list);
   //  console.log("amp_result");   
-  //  console.log(this.amp_result);
-   
+  //  console.log(this.amp_result);   
+  }
+
+  view_sub_report(item:string){
+
   }
 
   removeObjectWithId(objs:any, id:any) {
@@ -266,6 +289,7 @@ export class VaccineImportComponent {
   }
 
   createReport():void{
+    this.updateFlag = true;
     this.series = [];
     this.categories = this.data_amp_result.map((e:any)=>e.tmp_name);
     this.target.data = this.data_amp_result.map((e:any)=>{
