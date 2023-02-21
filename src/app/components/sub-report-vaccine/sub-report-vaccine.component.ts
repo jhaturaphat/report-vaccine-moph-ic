@@ -21,19 +21,17 @@ export class SubReportVaccineComponent implements  OnDestroy, OnInit {
   this.sub$ = this.Activatedroute.paramMap.subscribe((params) => {    
     this.chw = params.get('chw');
     this.amp = params.get('amp');
-    this.tmp = params.get('tmp');
-    this.item_persontypename = this.mockdata.vaccine_data.filter((e:any)=> {
-      return e.chw_code == this.chw && e.amp_code == this.amp && e.tmb_code == this.amp;
-    });
-    // this.item_persontypename = this._mockdata.vaccine_data.filter((e:any)=> e.chw_code == this.chw && e.amp_code == this.amp && e.tmb_code == this.amp)
-    // .map((e:any)=>e.person_type_name).reduce((unique:any, item:any)=>(unique.includes(item) ? unique : [...unique, item]),[]).sort();        
-    console.log('item_persontypename',this.item_persontypename);
-    
+    this.tmp = params.get('tmp');    
   });
  } 
 
   ngOnInit(): void {
-    
+    this.item_persontypename = this.mockdata.vaccine_data.filter((e:any)=> {
+      return (e.chw_code === this.chw) && (e.amp_code === this.amp) && (e.tmb_code === this.amp);
+    });
+    // this.item_persontypename = this._mockdata.vaccine_data.filter((e:any)=> e.chw_code == this.chw && e.amp_code == this.amp && e.tmb_code == this.amp)
+    // .map((e:any)=>e.person_type_name).reduce((unique:any, item:any)=>(unique.includes(item) ? unique : [...unique, item]),[]).sort();        
+    console.log('item_persontypename',this.item_persontypename);
   }
 
   ngOnDestroy(): void {

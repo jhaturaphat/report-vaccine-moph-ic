@@ -193,6 +193,8 @@ export class VaccineImportComponent implements OnInit {
         this.chw_code = this.mockdata.vaccine_data.map((e:any)=>e.chw_code).reduce((unique:any, item:any)=>(unique.includes(item) ? unique : [...unique, item]),[]).sort();        
         // console.log(this.chw_code);        
       }    
+      console.log(this.mockdata.vaccine_data);
+      
       this.isLoading = false;      
     });
   }
@@ -216,10 +218,10 @@ export class VaccineImportComponent implements OnInit {
     this.ampDropdownList.label = item;
     this.data_amp_result = [];
     console.log("ผลลัพธ์จังหวัด");    
-    console.log(this.chw_result);
+    // console.log(this.chw_result);
     this.amp_result = this.chw_result.filter((e:any) => e.amp_code === item);  //กรอกให้เหลือแต่อำเภอที่เลือกมา
-    console.log("กรอกให้เหลือแต่อำเภอที่เลือกมา");    
-    console.log(this.amp_result); 
+    console.log("กรองให้เหลือแต่อำเภอที่เลือกมา");    
+    // console.log(this.amp_result); 
     this.amp_result.reduce((res:any, obj:any)=>{
       if(!res[obj.tmb_code]){
         let tmp_name = (typeof obj.full_addr_name !== 'undefined')? obj.full_addr_name.split(' ')[0]:null;        

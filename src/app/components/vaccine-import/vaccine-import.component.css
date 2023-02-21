@@ -29,14 +29,15 @@
     0% { transform: rotate(0deg); }
     100% { transform: rotate(360deg); }
   }
-
-  .icofont-ui-delete:hover{
+  i[class^="icofont"]:hover {
     cursor: pointer;
+  }
+  .icofont-ui-delete:hover{    
     color: red;
     transform: rotate(2);
   }
-  .icofont-ui-search:hover{
-    cursor: pointer;
+  .icofont-spreadsheet:hover{    
     color: green;
     transform: rotate(2);
   }
+  
