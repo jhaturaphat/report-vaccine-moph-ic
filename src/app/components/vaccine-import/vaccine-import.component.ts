@@ -1,17 +1,17 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import readXlsxFile from 'read-excel-file';
 import * as XLSX from 'xlsx';
 import * as Highcharts from 'highcharts';
-// import HC_exporting from 'highcharts/modules/exporting';
-// import HC_Data from 'highcharts/modules/export-data';
-// import Accessbility from 'highcharts/modules/accessibility';
+import HC_exporting from 'highcharts/modules/exporting';
+import HC_Data from 'highcharts/modules/export-data';
+import Accessbility from 'highcharts/modules/accessibility';
 
 import { iSerail } from './Ichart-vaccine.interface';
 import { MockDataService } from 'src/app/services/mock-data.service';
 
-// HC_exporting(Highcharts);
-// HC_Data(Highcharts);
-// Accessbility(Highcharts);
+HC_exporting(Highcharts);
+HC_Data(Highcharts);
+Accessbility(Highcharts);
 
 @Component({
   selector: 'app-vaccine-import',
@@ -21,10 +21,6 @@ import { MockDataService } from 'src/app/services/mock-data.service';
 export class VaccineImportComponent implements OnInit {
 
   constructor(private mockdata: MockDataService) { }
-
-
-  myOptions: any = {};
-  linechart?: any;
 
 
   chwDropdownList: any = {
@@ -43,17 +39,20 @@ export class VaccineImportComponent implements OnInit {
 
 
   isLoading: boolean = false;
-  Highcharts: typeof Highcharts = Highcharts;
-  chartOptions: Highcharts.Options = {}; // required
-  updateFlag = false;
-  categories: string[] = [];
-  series: any[] = [];
+
   target: iSerail = { name: 'เป้าหมาย', type: 'column', data: [] };
   vac1: iSerail = { name: 'เข็ม1', type: 'column', data: [] };
   vac2: iSerail = { name: 'เข็ม2', type: 'column', data: [] };
   vac3: iSerail = { name: 'เข็ม3', type: 'column', data: [] };
   vac4: iSerail = { name: 'เข็ม4', type: 'column', data: [] };
 
+  // @ViewChild('chart') componentRef: any;
+  Highcharts: typeof Highcharts = Highcharts;
+  chartOptions: Highcharts.Options = { }; // required
+  updateFlag:boolean = false;
+  oneToOneFlag:boolean = true;
+  categories: string[] = [];
+  series: any[] = [];
 
   result: any[] = [];
   chw_code: any[] = [];
@@ -286,7 +285,7 @@ export class VaccineImportComponent implements OnInit {
     XLSX.writeFile(wb, 'ExcelSheet.xlsx');
   }
 
-  createReport(): void {
+  public createReport(): void {
 
     this.series = [];
     this.categories = this.data_amp_result.map((e: any) => e.tmp_name);
@@ -297,29 +296,21 @@ export class VaccineImportComponent implements OnInit {
     this.vac4.data = this.data_amp_result.map((e: any) => e.vaccine_plan_4Y);
 
     this.series.push(this.target, this.vac1, this.vac2, this.vac3, this.vac4);
-    console.log(this.categories);
-    console.log(this.series);
-
     this.createChart();
 
   }
 
-  createChart() {
+  public createChart() {
 
-    this.chartOptions.series = this.series;
-    this.chartOptions.xAxis = {
-      categories: this.categories
-    };
-    this.chartOptions.subtitle = {
-      text: this.toThaiDateString(new Date())
-    };
-    this.chartOptions.title = {
-      text: 'อัตราการฉีดเทียบจำนวนเข็มตำเมืองเดช อำเภอเดชอุดม'
-    }
+    this.chartOptions.subtitle = { text: this.toThaiDateString(new Date()) };
+    this.chartOptions.title = { text: 'อัตราการฉีดเทียบจำนวนเข็มตำเมืองเดช อำเภอเดชอุดม' };
+    this.chartOptions.xAxis = { categories: this.categories };
+    this.chartOptions.series = this.series;  
     this.updateFlag = true;
+
   }
 
-  toThaiDateString(date: Date) {
+  private toThaiDateString(date: Date) {
     let monthNames = [
       "มกราคม", "กุมภาพันธ์", "มีนาคม", "เมษายน",
       "พฤษภาคม", "มิถุนายน", "กรกฎาคม", "สิงหาคม.",

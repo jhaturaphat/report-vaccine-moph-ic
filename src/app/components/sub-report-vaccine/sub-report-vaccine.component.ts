@@ -1,9 +1,20 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, ElementRef, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { MockDataService } from 'src/app/services/mock-data.service';
 import * as Highcharts from 'highcharts';
+import { Options } from 'highcharts';
 import { iSerail } from '../vaccine-import/Ichart-vaccine.interface';
 
+// import Highcharts from 'highcharts';
+
+
+import HC_exporting from 'highcharts/modules/exporting';
+import HC_Data from 'highcharts/modules/export-data';
+import Accessbility from 'highcharts/modules/accessibility';
+
+HC_exporting(Highcharts);
+HC_Data(Highcharts);
+Accessbility(Highcharts);
 // HC_exporting(Highcharts);
 
 @Component({
@@ -21,17 +32,20 @@ export class SubReportVaccineComponent implements OnDestroy, OnInit {
   vaccine_plans: Object[] = [];
   report_types: any[] = [];
 
-  series:any[] = [];
-  categories:any[] = [];
-  target:iSerail = {name:'เป้าหมาย', type: 'column', data:[]};
-  vac1:iSerail = {name:'เข็ม1',type: 'column',data:[]};
-  vac2:iSerail = {name:'เข็ม2',type: 'column',data:[]};
-  vac3:iSerail = {name:'เข็ม3',type: 'column',data:[]};
-  vac4:iSerail = {name:'เข็ม4',type: 'column',data:[]};
+  series: any[] = [];
+  categories: any[] = [];
+  target: iSerail = { name: 'เป้าหมาย', type: 'column', data: [] };
+  vac1: iSerail = { name: 'เข็ม1', type: 'column', data: [] };
+  vac2: iSerail = { name: 'เข็ม2', type: 'column', data: [] };
+  vac3: iSerail = { name: 'เข็ม3', type: 'column', data: [] };
+  vac4: iSerail = { name: 'เข็ม4', type: 'column', data: [] };
 
+  @ViewChild('chart') componentRef: any;
   Highcharts: typeof Highcharts = Highcharts;
-  updateFlag = false;
-  chartOptions: Highcharts.Options = { };
+  updateFlag:boolean = false;
+  oneToOneFlag:boolean = true;
+  chartRef:any;
+  chartOptions: Options = { };
 
   constructor(
     private mockdata: MockDataService,
@@ -93,17 +107,17 @@ export class SubReportVaccineComponent implements OnDestroy, OnInit {
     this.report_types.sort((a, b) => a.person_type_name - b.person_type_name);
     console.log(this.report_types);
 
-    this.categories = this.report_types.map((e:any)=>e.person_type_name);
+    this.categories = this.report_types.map((e: any) => e.person_type_name);
     this.series = [];
-    this.target.data = this.report_types.map((e:any)=>e.target1);
-    this.vac1.data = this.report_types.map((e:any)=> e.vaccine_plan_1Y);
-    this.vac2.data = this.report_types.map((e:any)=> e.vaccine_plan_2Y);
-    this.vac3.data = this.report_types.map((e:any)=> e.vaccine_plan_3Y);
-    this.vac4.data = this.report_types.map((e:any)=> e.vaccine_plan_4Y);
+    this.target.data = this.report_types.map((e: any) => e.target1);
+    this.vac1.data = this.report_types.map((e: any) => e.vaccine_plan_1Y);
+    this.vac2.data = this.report_types.map((e: any) => e.vaccine_plan_2Y);
+    this.vac3.data = this.report_types.map((e: any) => e.vaccine_plan_3Y);
+    this.vac4.data = this.report_types.map((e: any) => e.vaccine_plan_4Y);
 
-    this.series.push(this.target, this.vac1,this.vac2,this.vac3,this.vac4);
+    this.series.push(this.target, this.vac1, this.vac2, this.vac3, this.vac4);
     // console.log(this.series);
-    this.createChart();
+    // this.createChart();
   }
 
 
@@ -111,16 +125,22 @@ export class SubReportVaccineComponent implements OnDestroy, OnInit {
     if (this.sub$) this.sub$.unsubscribe();
   }
 
-  createChart(){
+  chartCallback: Highcharts.ChartCallbackFunction = chart => {
+    this.chartRef = chart;
+    console.log('Chart Event');
+    
+  };
+
+  createChart() {
     this.chartOptions.series = this.series;
     this.chartOptions.xAxis = {
       categories: this.categories
     };
     this.chartOptions.subtitle = {
-      text:this.toThaiDateString(new Date())
+      text: this.toThaiDateString(new Date())
     };
     this.chartOptions.title = {
-      text:'อัตราการฉีดเทียบจำนวนเข็ม'
+      text: 'อัตราการฉีดเทียบจำนวนเข็ม'
     }
     this.updateFlag = true;
   }
@@ -145,5 +165,4 @@ export class SubReportVaccineComponent implements OnDestroy, OnInit {
   }
 
 }
-
 
