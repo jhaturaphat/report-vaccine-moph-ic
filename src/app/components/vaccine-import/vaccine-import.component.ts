@@ -194,6 +194,7 @@ export class VaccineImportComponent implements OnInit {
       console.log(this.mockdata.vaccine_data);
 
       this.isLoading = false;
+
     });
   }
 
@@ -205,9 +206,6 @@ export class VaccineImportComponent implements OnInit {
     this.amp_code = this.chw_result.map((e: any) => e.amp_code).reduce((unique: any, item: any) => (unique.includes(item) ? unique : [...unique, item]), []);
     // console.log(this.amp_code); 
     this.amp_code.sort((a, b) => a - b);
-
-
-
 
   }
 

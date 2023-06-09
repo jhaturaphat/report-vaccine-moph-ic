@@ -15,6 +15,7 @@ import { VaccineImportComponent } from './components/vaccine-import/vaccine-impo
 import { DashboardComponent } from './components/dashboard/dashboard.component';
 import { HighchartsChartModule  } from 'highcharts-angular';
 import { SubReportVaccineComponent } from './components/sub-report-vaccine/sub-report-vaccine.component';
+import { ImmunizationTargetComponent } from './components/immunization-target/immunization-target.component';
 
 
 @NgModule({
@@ -22,7 +23,8 @@ import { SubReportVaccineComponent } from './components/sub-report-vaccine/sub-r
     AppComponent,
     VaccineImportComponent,
     DashboardComponent,
-    SubReportVaccineComponent
+    SubReportVaccineComponent,
+    ImmunizationTargetComponent
   ],
   imports: [
     BrowserModule,
