@@ -23,8 +23,8 @@ export class LoginMophicComponent {
   
   public onSubmit(){
     this.loginService.login(this.loginForm.value.username, this.loginForm.value.password)
-    .subscribe((result)=>{
-      console.log(result);      
+    .subscribe(result=>{
+      console.log(result.error);      
     })
   }
 
